@@ -46,7 +46,6 @@
     input[type="text"] {
       padding: 8px;
       width: 100%;
-      font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
@@ -69,6 +68,16 @@
       padding: 10px;
       border-radius: 4px;
       box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+	.controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .timer {
+      font-size: 20px;
+      font-weight: bold;
     }
     button {
       margin-top: 10px;
@@ -99,7 +108,10 @@
 <body>
   <header>Pratique Inglês</header>
   <main>
-    <p>Tempo: <span id="timer">0:00</span> <button id="reset-timer">Resetar Timer</button></p>
+    <div class="controls">
+      <div class="timer">Tempo: <span id="timer">0:00</span></div>
+      <button id="reset-timer">Resetar Timer</button>
+    </div>
     <table>
       <thead>
         <tr>
@@ -189,12 +201,6 @@
 
               // Identificar o próximo campo antes de remover a linha
               const nextInput = document.querySelector(`#input-${index + 1}`);
-
-              // Remover a linha correspondente aos exemplos, se existir
-              const exampleRow = document.getElementById(`examples-${index}`);
-              if (exampleRow) {
-                exampleRow.remove();
-              }
 
               // Remover a linha com animação
               row.classList.add("fade-out");
