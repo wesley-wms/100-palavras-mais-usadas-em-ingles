@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Pratique Inglês</title>
   <style>
     body {
@@ -43,9 +43,15 @@
     th {
       background-color: #f1f3f4;
     }
+    td {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
     input[type="text"] {
       padding: 8px;
-      width: 100%;
+      font-size: 16px; /* Evita zoom automático */
+      width: 50%; /* Ajuste proporcional */
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
