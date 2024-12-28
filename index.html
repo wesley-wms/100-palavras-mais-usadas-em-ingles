@@ -44,14 +44,13 @@
       background-color: #f1f3f4;
     }
     td {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      white-space: nowrap; /* Evita quebra de linha */
+      text-align: left;
     }
     input[type="text"] {
       padding: 8px;
       font-size: 16px; /* Evita zoom automático */
-      width: 50%; /* Ajuste proporcional */
+      width: 100%; /* Preenche a célula adequadamente */
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
@@ -174,7 +173,6 @@
 
       words.forEach((word, index) => {
         const row = document.createElement("tr");
-        row.setAttribute("id", `row-${index}`);
         row.innerHTML = `
           <td>${word.english}</td>
           <td><input type="text" id="input-${index}" /></td>
@@ -190,10 +188,12 @@
               inputField.classList.add("correct");
               inputField.classList.remove("incorrect");
 
-              const row = document.getElementById(`row-${index}`);
+              const row = inputField.closest("tr");
               row.classList.add("fade-out");
               setTimeout(() => {
                 row.remove();
+
+                // Mover foco para o próximo campo
                 const nextInput = document.querySelector(`#input-${index + 1}`);
                 if (nextInput) nextInput.focus();
               }, 500);
