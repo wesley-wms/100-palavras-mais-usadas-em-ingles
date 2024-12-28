@@ -63,6 +63,12 @@
     .fade-out {
       animation: fadeOut 0.5s forwards;
     }
+    .examples {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+    }
     button {
       margin-top: 10px;
       padding: 10px 20px;
@@ -76,21 +82,6 @@
     }
     button:hover {
       background-color: #3367d6;
-    }
-    @keyframes correct-glow {
-      0% { text-shadow: 0 0 10px green; }
-      50% { text-shadow: 0 0 20px green; }
-      100% { text-shadow: 0 0 10px green; }
-    }
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; height: 0; padding: 0; margin: 0; }
-    }
-    .examples {
-      background-color: #fcf3cf; /* Cor discreta para o fundo */
-      padding: 10px;
-      border-radius: 4px;
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
     }
     footer {
       background-color: #f1f3f4;
@@ -194,8 +185,18 @@
             if (word.portuguese.includes(inputValue)) {
               inputField.classList.add("correct");
               inputField.classList.remove("incorrect");
+
+              // Identificar o próximo campo antes de remover a linha
+              const nextInput = document.querySelector(`#input-${index + 1}`);
+
+              // Remover a linha com animação
               row.classList.add("fade-out");
-              setTimeout(() => row.remove(), 500);
+              setTimeout(() => {
+                row.remove();
+                // Colocar o foco no próximo campo, se existir
+                if (nextInput) nextInput.focus();
+              }, 500);
+
               correctCount++;
               if (correctCount === words.length) stopTimer();
             } else {
