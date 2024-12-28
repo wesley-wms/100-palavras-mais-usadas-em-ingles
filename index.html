@@ -189,6 +189,12 @@
               // Identificar o próximo campo antes de remover a linha
               const nextInput = document.querySelector(`#input-${index + 1}`);
 
+              // Remover a linha correspondente aos exemplos, se existir
+              const exampleRow = document.getElementById(`examples-${index}`);
+              if (exampleRow) {
+                exampleRow.remove();
+              }
+
               // Remover a linha com animação
               row.classList.add("fade-out");
               setTimeout(() => {
