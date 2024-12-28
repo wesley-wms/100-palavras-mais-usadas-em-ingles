@@ -63,12 +63,20 @@
     .fade-out {
       animation: fadeOut 0.5s forwards;
     }
-    .examples {
-      background-color: #f9f9f9;
-      padding: 10px;
-      border-radius: 4px;
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
-    }
+.examples {
+background-color: #f9f9f9;
+padding: 15px;
+border-radius: 4px;
+box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+margin-top: 10px;
+}
+.examples p {
+margin: 10px 0;
+}
+.examples .definition {
+font-weight: bold;
+color: #333;
+}
 	.controls {
       display: flex;
       justify-content: space-between;
@@ -129,17 +137,33 @@
   </footer>
   <script>
     const words = [
-      { english: "apple", portuguese: ["maçã"], examples: [
-        { en: "I eat an apple every day.", pt: "Eu como uma maçã todos os dias." },
-        { en: "This apple is very sweet.", pt: "Esta maçã é muito doce." },
-        { en: "She bought an apple pie.", pt: "Ela comprou uma torta de maçã." }
-      ] },
-      { english: "car", portuguese: ["carro"], examples: [
-        { en: "My car is red.", pt: "Meu carro é vermelho." },
-        { en: "We need to fix the car.", pt: "Precisamos consertar o carro." },
-        { en: "He drives a fast car.", pt: "Ele dirige um carro rápido." }
-      ] }
-    ];
+  {
+    english: "a",
+    portuguese: ["um", "uma", "por", "cada", "em"],
+    examples: [
+      { 
+        definition: "Um / Uma – Artigo indefinido usado para se referir a algo de forma geral.",
+        en: "She has a car.", 
+        pt: "Ela tem um carro." 
+      },
+      { 
+        definition: "Por – Usado para indicar uma taxa, proporção ou unidade.",
+        en: "He earns $20 a day.", 
+        pt: "Ele ganha 20 dólares por dia." 
+      },
+	  { 
+        definition: "Cada – Utilizado para expressar distribuição ou frequência.",
+        en: "Two times a week.", 
+        pt: "Duas vezes cada semana." 
+      },
+	  { 
+        definition: "Em – Indica lugar ou direção em certas expressões.",
+        en: "Arrived at a point.", 
+        pt: "Chegou em um ponto." 
+      },
+    ]
+  }
+];
 
     const tableBody = document.getElementById("word-list");
     const timerElement = document.getElementById("timer");
@@ -179,64 +203,74 @@
     resetButton.addEventListener("click", resetTimer);
 
     function loadTable() {
-      tableBody.innerHTML = "";
+  tableBody.innerHTML = "";
 
-      words.forEach((word, index) => {
-        const row = document.createElement("tr");
-        row.setAttribute("id", `row-${index}`);
-        row.innerHTML = `
-          <td><span class="word" data-index="${index}">${word.english}</span></td>
-          <td><input type="text" id="input-${index}" /></td>
-        `;
-        tableBody.appendChild(row);
+  words.forEach((word, index) => {
+    const row = document.createElement("tr");
+    row.setAttribute("id", `row-${index}`);
+    row.innerHTML = `
+      <td><span class="word" data-index="${index}">${word.english}</span></td>
+      <td><input type="text" id="input-${index}" /></td>
+    `;
+    tableBody.appendChild(row);
 
-        const inputField = document.getElementById(`input-${index}`);
-        inputField.addEventListener("input", startTimer);
-        inputField.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            const inputValue = inputField.value.trim().toLowerCase();
-            if (word.portuguese.includes(inputValue)) {
-              inputField.classList.add("correct");
-              inputField.classList.remove("incorrect");
+    const inputField = document.getElementById(`input-${index}`);
+    inputField.addEventListener("input", startTimer);
+    inputField.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const inputValue = inputField.value.trim().toLowerCase();
+        if (word.portuguese.includes(inputValue)) {
+          inputField.classList.add("correct");
+          inputField.classList.remove("incorrect");
 
-              // Identificar o próximo campo antes de remover a linha
-              const nextInput = document.querySelector(`#input-${index + 1}`);
-
-              // Remover a linha com animação
-              row.classList.add("fade-out");
-              setTimeout(() => {
-                row.remove();
-                // Colocar o foco no próximo campo, se existir
-                if (nextInput) nextInput.focus();
-              }, 500);
-
-              correctCount++;
-              if (correctCount === words.length) stopTimer();
-            } else {
-              inputField.classList.add("incorrect");
-            }
+          // Remover a linha de exemplos (se existir)
+          const exampleRow = document.getElementById(`examples-${index}`);
+          if (exampleRow) {
+            exampleRow.remove();
           }
-        });
 
-        row.querySelector(".word").addEventListener("click", function () {
-          toggleExamples(index, row, word.examples);
-        });
-      });
-    }
+          // Remover a linha da palavra
+          row.classList.add("fade-out");
+          setTimeout(() => {
+            row.remove();
+
+            // Focar no próximo campo, se existir
+            const nextInput = document.querySelector(`#input-${index + 1}`);
+            if (nextInput) nextInput.focus();
+          }, 500);
+
+          correctCount++;
+          if (correctCount === words.length) stopTimer();
+        } else {
+          inputField.classList.add("incorrect");
+        }
+      }
+    });
+
+    row.querySelector(".word").addEventListener("click", function () {
+      toggleExamples(index, row, word.examples);
+    });
+  });
+}
+
 
     function toggleExamples(index, row, examples) {
-      const existingExamples = document.getElementById(`examples-${index}`);
-      if (existingExamples) {
-        existingExamples.remove();
-      } else {
-        const exampleRow = document.createElement("tr");
-        exampleRow.setAttribute("id", `examples-${index}`);
-        exampleRow.innerHTML = `<td colspan="2" class="examples">
-          ${examples.map(ex => `<p><b>${ex.en}</b> - ${ex.pt}</p>`).join("")}
-        </td>`;
-        row.insertAdjacentElement("afterend", exampleRow);
-      }
-    }
+  const existingExamples = document.getElementById(`examples-${index}`);
+  if (existingExamples) {
+    existingExamples.remove();
+  } else {
+    const exampleRow = document.createElement("tr");
+    exampleRow.setAttribute("id", `examples-${index}`);
+    exampleRow.innerHTML = `<td colspan="2" class="examples">
+      ${examples.map(ex => `
+        <p class="definition">${ex.definition}</p>
+        <p>Exemplo: ${ex.en} → ${ex.pt}</p>
+      `).join("")}
+    </td>`;
+    row.insertAdjacentElement("afterend", exampleRow);
+  }
+}
+
 
     function updateVisitorCount() {
       let count = localStorage.getItem('visitorCount') || 0;
