@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pratique Inglês</title>
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f8f9fa;
+      color: #212121;
+    }
+    header {
+      background-color: #4285f4;
+      color: white;
+      padding: 16px;
+      font-size: 24px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+      background-color: #f1f3f4;
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .correct {
+      color: green;
+      font-weight: bold;
+      animation: correct-glow 1s ease-in-out;
+    }
+    .incorrect {
+      color: red;
+      font-weight: bold;
+      animation: incorrect-shake 0.3s;
+    }
+    .fade-out {
+      animation: fadeOut 0.5s forwards;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      background-color: #4285f4;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    button:hover {
+      background-color: #3367d6;
+    }
+    @keyframes correct-glow {
+      0% { text-shadow: 0 0 10px green; }
+      50% { text-shadow: 0 0 20px green; }
+      100% { text-shadow: 0 0 10px green; }
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; height: 0; padding: 0; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>Pratique Inglês</header>
+  <main>
+    <p>Tempo: <span id="timer">0:00</span> <button id="reset-timer">Resetar Timer</button></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Palavra em Inglês</th>
+          <th>Tradução em Português</th>
+        </tr>
+      </thead>
+      <tbody id="word-list">
+        <!-- As palavras serão carregadas aqui -->
+      </tbody>
+    </table>
+  </main>
+  <script>
+    const words = [
+      { english: "apple", portuguese: ["maçã"] },
+      { english: "car", portuguese: ["carro"] },
+      { english: "house", portuguese: ["casa"] },
+      { english: "dog", portuguese: ["cachorro", "cão"] },
+      { english: "cat", portuguese: ["gato"] }
+    ];
+
+    const tableBody = document.getElementById("word-list");
+    const timerElement = document.getElementById("timer");
+    const resetButton = document.getElementById("reset-timer");
+
+    let startTime = null;
+    let timerInterval = null;
+    let correctCount = 0;
+
+    function startTimer() {
+      if (!startTime) {
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+      startTime = null;
+      clearInterval(timerInterval);
+      timerElement.textContent = "0:00";
+      correctCount = 0;
+      loadTable();
+    }
+
+    function updateTimer() {
+      const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = Math.floor(elapsedTime / 60);
+      const seconds = elapsedTime % 60;
+      timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    resetButton.addEventListener("click", resetTimer);
+
+    function loadTable() {
+      tableBody.innerHTML = "";
+
+      words.forEach((word, index) => {
+        const row = document.createElement("tr");
+        row.setAttribute("id", `row-${index}`);
+        row.innerHTML = `
+          <td>${word.english}</td>
+          <td><input type="text" id="input-${index}" /></td>
+        `;
+        tableBody.appendChild(row);
+
+        const inputField = document.getElementById(`input-${index}`);
+        inputField.addEventListener("input", startTimer);
+        inputField.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            const inputValue = inputField.value.trim().toLowerCase();
+            if (word.portuguese.some(pt => pt.toLowerCase() === inputValue)) {
+              inputField.classList.add("correct");
+              inputField.classList.remove("incorrect");
+
+              const row = document.getElementById(`row-${index}`);
+              row.classList.add("fade-out");
+              setTimeout(() => {
+                row.remove();
+                const nextInput = document.querySelector(`#input-${index + 1}`);
+                if (nextInput) nextInput.focus();
+              }, 500);
+
+              correctCount++;
+              if (correctCount === words.length) {
+                stopTimer();
+              }
+            } else {
+              inputField.classList.add("incorrect");
+            }
+          }
+        });
+      });
+    }
+
+    loadTable();
+  </script>
+</body>
+</html>
