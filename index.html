@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pratique Inglês</title>
   <style>
     body {
@@ -43,14 +43,9 @@
     th {
       background-color: #f1f3f4;
     }
-    td {
-      white-space: nowrap; /* Evita quebra de linha */
-      text-align: left;
-    }
     input[type="text"] {
       padding: 8px;
-      font-size: 16px; /* Evita zoom automático */
-      width: 100%; /* Preenche a célula adequadamente */
+      width: 100%;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
@@ -67,6 +62,13 @@
     }
     .fade-out {
       animation: fadeOut 0.5s forwards;
+    }
+    .examples {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: #f9f9f9;
     }
     button {
       margin-top: 10px;
@@ -115,7 +117,6 @@
         </tr>
       </thead>
       <tbody id="word-list">
-        <!-- As palavras serão carregadas aqui -->
       </tbody>
     </table>
   </main>
@@ -124,106 +125,55 @@
   </footer>
   <script>
     const words = [
-      { english: "apple", portuguese: ["maçã"] },
-      { english: "car", portuguese: ["carro"] },
-      { english: "house", portuguese: ["casa"] },
-      { english: "dog", portuguese: ["cachorro", "cão"] },
-      { english: "cat", portuguese: ["gato"] }
+      { english: "apple", portuguese: ["maçã"], examples: [
+        { en: "I eat an apple every day.", pt: "Eu como uma maçã todos os dias." },
+        { en: "She bought a red apple.", pt: "Ela comprou uma maçã vermelha." },
+        { en: "The apple is sweet.", pt: "A maçã é doce." }
+      ] },
+      { english: "dog", portuguese: ["cachorro", "cão"], examples: [
+        { en: "The dog is barking.", pt: "O cachorro está latindo." },
+        { en: "I have a small dog.", pt: "Eu tenho um cachorro pequeno." },
+        { en: "Dogs are loyal animals.", pt: "Os cães são animais leais." }
+      ] }
     ];
 
     const tableBody = document.getElementById("word-list");
-    const timerElement = document.getElementById("timer");
-    const resetButton = document.getElementById("reset-timer");
-    const visitorCountElement = document.getElementById("visitor-count");
-
-    let startTime = null;
-    let timerInterval = null;
-    let correctCount = 0;
-
-    function startTimer() {
-      if (!startTime) {
-        startTime = Date.now();
-        timerInterval = setInterval(updateTimer, 1000);
-      }
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-    }
-
-    function resetTimer() {
-      startTime = null;
-      clearInterval(timerInterval);
-      timerElement.textContent = "0:00";
-      correctCount = 0;
-      loadTable();
-    }
-
-    function updateTimer() {
-      const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-      const minutes = Math.floor(elapsedTime / 60);
-      const seconds = elapsedTime % 60;
-      timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    resetButton.addEventListener("click", resetTimer);
 
     function loadTable() {
       tableBody.innerHTML = "";
-
       words.forEach((word, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${word.english}</td>
+          <td><span class="word" data-index="${index}">${word.english}</span></td>
           <td><input type="text" id="input-${index}" /></td>
         `;
         tableBody.appendChild(row);
 
-        const inputField = document.getElementById(`input-${index}`);
-        inputField.addEventListener("input", startTimer);
-        inputField.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            const inputValue = inputField.value.trim().toLowerCase();
-            if (word.portuguese.some(pt => pt.toLowerCase() === inputValue)) {
-              inputField.classList.add("correct");
-              inputField.classList.remove("incorrect");
-
-              const row = inputField.closest("tr");
-              row.classList.add("fade-out");
-              setTimeout(() => {
-                row.remove();
-
-                // Mover foco para o próximo campo
-                const nextInput = document.querySelector(`#input-${index + 1}`);
-                if (nextInput) nextInput.focus();
-              }, 500);
-
-              correctCount++;
-              if (correctCount === words.length) {
-                stopTimer();
-              }
-            } else {
-              inputField.classList.add("incorrect");
-            }
-          }
+        const wordElement = row.querySelector(".word");
+        wordElement.addEventListener("click", () => {
+          toggleExamples(index);
         });
       });
     }
 
-    function updateVisitorCount() {
-      let count = localStorage.getItem('visitorCount');
-      if (!count) {
-        count = 0;
+    function toggleExamples(index) {
+      const word = words[index];
+      const existingRow = document.getElementById(`examples-${index}`);
+      if (existingRow) {
+        existingRow.remove();
+      } else {
+        const examplesRow = document.createElement("tr");
+        examplesRow.id = `examples-${index}`;
+        examplesRow.innerHTML = `<td colspan="2">
+          <div class="examples">
+            ${word.examples.map(e => `<p><b>${e.en}</b><br>${e.pt}</p>`).join('')}
+          </div>
+        </td>`;
+        tableBody.insertBefore(examplesRow, tableBody.children[index + 1]);
       }
-      count++;
-      localStorage.setItem('visitorCount', count);
-      visitorCountElement.textContent = count;
     }
 
-    window.onload = function() {
-      updateVisitorCount();
-      loadTable();
-    };
+    loadTable();
   </script>
 </body>
 </html>
