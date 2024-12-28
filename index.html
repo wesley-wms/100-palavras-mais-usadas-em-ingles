@@ -86,6 +86,16 @@
       0% { opacity: 1; }
       100% { opacity: 0; height: 0; padding: 0; margin: 0; }
     }
+    footer {
+      background-color: #f1f3f4;
+      color: #212121;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -104,6 +114,9 @@
       </tbody>
     </table>
   </main>
+  <footer>
+    Visitantes: <span id="visitor-count">0</span>
+  </footer>
   <script>
     const words = [
       { english: "apple", portuguese: ["maçã"] },
@@ -116,6 +129,7 @@
     const tableBody = document.getElementById("word-list");
     const timerElement = document.getElementById("timer");
     const resetButton = document.getElementById("reset-timer");
+    const visitorCountElement = document.getElementById("visitor-count");
 
     let startTime = null;
     let timerInterval = null;
@@ -190,7 +204,20 @@
       });
     }
 
-    loadTable();
+    function updateVisitorCount() {
+      let count = localStorage.getItem('visitorCount');
+      if (!count) {
+        count = 0;
+      }
+      count++;
+      localStorage.setItem('visitorCount', count);
+      visitorCountElement.textContent = count;
+    }
+
+    window.onload = function() {
+      updateVisitorCount();
+      loadTable();
+    };
   </script>
 </body>
 </html>
