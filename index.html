@@ -142,6 +142,20 @@ color: #333;
     transform: translate(-50%, -50%) scale(1);
   }
 }
+ .advertisement {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ff9800;
+      color: white;
+      padding: 15px;
+      font-size: 18px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
 
   </style>
 </head>
@@ -168,6 +182,11 @@ color: #333;
   <div id="congratulations" class="congratulations">
 	  Parabéns! Você concluiu todas as palavras! 🎉
 	</div>
+	<div id="advertisement" class="advertisement">
+    Explore a versão completa com as 1000 palavras em Inglês mais usadas no dia a dia e continue evoluindo no seu aprendizado de inglês!<br/>
+	Invista apenas R$ 9,90 <a href="https://wa.me/5545998275525" target="_blank">Clique aqui para solicitar via WhatsApp</a>
+
+  </div>
   <script>
     const words = [
   {
@@ -203,7 +222,9 @@ color: #333;
 
 	function updateAccuracy() {
       const percentage = words.length > 0 ? ((correctCount / words.length) * 100).toFixed(2) : 0;
-      accuracyElement.textContent = `Acertos: ${correctCount}/${words.length} (${percentage}%)`;
+      console.log(words.length)
+	  console.log(correctCount)
+	  accuracyElement.textContent = `Acertos: ${correctCount}/${words.length} (${percentage}%)`;
     }
 
 
