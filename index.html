@@ -102,6 +102,10 @@ color: #333;
     button:hover {
       background-color: #3367d6;
     }
+	.accuracy {
+      font-size: 18px;
+      margin-top: 10px;
+    }
     footer {
       background-color: #f1f3f4;
       color: #212121;
@@ -146,6 +150,7 @@ color: #333;
   <main>
     <div class="controls">
       <div class="timer">Tempo: <span id="timer">0:00</span></div>
+	  <div class="accuracy"><span id="accuracy">Acertos: 0/4 (0%)</span></div>
       <button id="reset-timer">Resetar Timer</button>
     </div>
     <table>
@@ -189,11 +194,18 @@ color: #333;
 
     const tableBody = document.getElementById("word-list");
     const timerElement = document.getElementById("timer");
+    const accuracyElement = document.getElementById("accuracy");
     const resetButton = document.getElementById("reset-timer");
 
     let startTime = null;
     let timerInterval = null;
     let correctCount = 0;
+
+	function updateAccuracy() {
+      const percentage = words.length > 0 ? ((correctCount / words.length) * 100).toFixed(2) : 0;
+      accuracyElement.textContent = `Acertos: ${correctCount}/${words.length} (${percentage}%)`;
+    }
+
 
     function startTimer() {
       if (!startTime) {
@@ -211,6 +223,7 @@ color: #333;
       clearInterval(timerInterval);
       timerElement.textContent = "0:00";
       correctCount = 0;
+      updateAccuracy();
       loadTable();
     }
 
@@ -244,6 +257,7 @@ color: #333;
           inputField.classList.add("correct");
           inputField.classList.remove("incorrect");
 
+
           // Remover a linha de exemplos (se existir)
           const exampleRow = document.getElementById(`examples-${index}`);
           if (exampleRow) {
@@ -261,6 +275,7 @@ color: #333;
           }, 500);
 
           correctCount++;
+		  updateAccuracy();
           if (correctCount === words.length) {
 			stopTimer();
             document.getElementById("table-head").style.display = "none"; // Remove o cabeçalho
