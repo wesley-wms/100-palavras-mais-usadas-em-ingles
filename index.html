@@ -46,10 +46,14 @@
     input[type="text"] {
       padding: 8px;
       width: 100%;
-      font-size: 16px;
+	  font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+    }
+    input:disabled {
+      background-color: #e9ecef;
+      color: #6c757d;
     }
     .correct {
       color: green;
@@ -64,21 +68,21 @@
     .fade-out {
       animation: fadeOut 0.5s forwards;
     }
-    .examples {
-      background-color: #f9f9f9;
-      padding: 15px;
-      border-radius: 4px;
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
-      margin-top: 10px;
-    }
-    .examples p {
-      margin: 10px 0;
-    }
-    .examples .definition {
-      font-weight: bold;
-      color: #333;
-    }
-    .controls {
+.examples {
+background-color: #f9f9f9;
+padding: 15px;
+border-radius: 4px;
+box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+margin-top: 10px;
+}
+.examples p {
+margin: 10px 0;
+}
+.examples .definition {
+font-weight: bold;
+color: #333;
+}
+	.controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -102,7 +106,11 @@
     button:hover {
       background-color: #3367d6;
     }
-    .accuracy {
+	button:disabled {
+      background-color: #b0bec5;
+      cursor: not-allowed;
+    }
+	.accuracy {
       font-size: 18px;
       margin-top: 10px;
     }
@@ -116,33 +124,33 @@
       width: 100%;
       box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
     }
-    .congratulations {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #4caf50;
-      color: white;
-      padding: 20px;
-      font-size: 24px;
-      text-align: center;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      animation: fadeInScale 0.5s ease-out;
-    }
+	.congratulations {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 20px;
+  font-size: 24px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeInScale 0.5s ease-out;
+}
 
-    @keyframes fadeInScale {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-    .advertisement {
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+ .advertisement {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -164,8 +172,8 @@
   <main>
     <div class="controls">
       <div class="timer">Tempo: <span id="timer">0:00</span></div>
-      <div class="accuracy"><span id="accuracy">Acertos: 0/100 (0%)</span></div>
-      <button id="reset-timer">Resetar Timer</button>
+	  <div class="accuracy"><span id="accuracy">Acertos: 0/100 (0%)</span></div>
+      <button id="reset-timer" disabled>Resetar Timer</button>
     </div>
     <table>
       <thead id="table-head">
@@ -180,19 +188,19 @@
     </table>
   </main>
   <div id="congratulations" class="congratulations">
-    Parabéns! Você concluiu todas as palavras! 🎉
-  </div>
-  <div id="advertisement" class="advertisement">
-    Lançamento exclusivo no dia 31 de janeiro de 2025!!!<br/>
+	  Parabéns! Você concluiu todas as palavras! 🎉
+	</div>
+	<div id="advertisement" class="advertisement">
+	Lançamento exclusivo no dia 31 de janeiro de 2025!!!<br/>
     Entre já na lista de espera do aplicativo que vai turbinar seu aprendizado prático de Inglês.<br/>
     <a href="https://wa.me/5545999380856" target="_blank">Envie um "eu quero" para nosso Whatsapp</a>
   </div>
   <script>
     const words = [
-      {"english": "I", "portuguese": ["eu"], "examples": [{"definition": "Pronome pessoal sujeito.", "en": "I am happy.", "pt": "Eu estou feliz."}]},
-      {"english": "you", "portuguese": ["você", "vocês", "tu"], "examples": [{"definition": "Pronome pessoal sujeito ou objeto.", "en": "You are my friend.", "pt": "Você é meu amigo."}]},
-      {"english": "he", "portuguese": ["ele"], "examples": [{"definition": "Pronome pessoal sujeito masculino.", "en": "He is a teacher.", "pt": "Ele é um professor."}]}
-    ];
+{"english": "I", "portuguese": ["eu"], "examples": [{"definition": "Pronome pessoal sujeito.", "en": "I am happy.", "pt": "Eu estou feliz."}]},
+{"english": "you", "portuguese": ["você", "vocês", "tu"], "examples": [{"definition": "Pronome pessoal sujeito ou objeto.", "en": "You are my friend.", "pt": "Você é meu amigo."}]},
+{"english": "he", "portuguese": ["ele"], "examples": [{"definition": "Pronome pessoal sujeito masculino.", "en": "He is a teacher.", "pt": "Ele é um professor."}]}
+	];
 
     const tableBody = document.getElementById("word-list");
     const timerElement = document.getElementById("timer");
@@ -203,7 +211,7 @@
     let timerInterval = null;
     let correctCount = 0;
 
-    function updateAccuracy() {
+	function updateAccuracy() {
       const percentage = words.length > 0 ? ((correctCount / words.length) * 100).toFixed(2) : 0;
       accuracyElement.textContent = `Acertos: ${correctCount}/${words.length} (${percentage}%)`;
     }
@@ -226,6 +234,7 @@
       correctCount = 0;
       updateAccuracy();
       loadTable();
+      resetButton.disabled = true;
     }
 
     function updateTimer() {
@@ -233,88 +242,93 @@
       const minutes = Math.floor(elapsedTime / 60);
       const seconds = elapsedTime % 60;
       timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+      if (elapsedTime > 0) {
+        resetButton.textContent = "Reiniciar";
+        resetButton.disabled = false;
+      } else {
+        resetButton.textContent = "Resetar Timer";
+        resetButton.disabled = true;
+      }
     }
 
     resetButton.addEventListener("click", resetTimer);
 
     function loadTable() {
-      tableBody.innerHTML = "";
+  tableBody.innerHTML = "";
 
-      words.forEach((word, index) => {
-        const row = document.createElement("tr");
-        row.setAttribute("id", `row-${index}`);
-        row.innerHTML = `
-          <td><span class="word" data-index="${index}">${word.english}</span></td>
-          <td><input type="text" id="input-${index}" ${index === 0 ? "" : "disabled"} /></td>
-        `;
-        tableBody.appendChild(row);
+  words.forEach((word, index) => {
+    const row = document.createElement("tr");
+    row.setAttribute("id", `row-${index}`);
+    row.innerHTML = `
+      <td><span class="word" data-index="${index}">${word.english}</span></td>
+      <td><input type="text" id="input-${index}" ${index === 0 ? '' : 'disabled'} /></td>
+    `;
+    tableBody.appendChild(row);
 
-        const inputField = document.getElementById(`input-${index}`);
-        inputField.addEventListener("input", startTimer);
-        inputField.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            const inputValue = inputField.value.trim().toLowerCase();
-            if (word.portuguese.includes(inputValue)) {
-              inputField.classList.add("correct");
-              inputField.classList.remove("incorrect");
+    const inputField = document.getElementById(`input-${index}`);
+    inputField.addEventListener("input", startTimer);
+    inputField.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const inputValue = inputField.value.trim().toLowerCase();
+        if (word.portuguese.includes(inputValue)) {
+          inputField.classList.add("correct");
+          inputField.classList.remove("incorrect");
 
-              // Remover a linha da palavra
-              row.classList.add("fade-out");
-              setTimeout(() => {
-                row.remove();
+          const nextInput = document.querySelector(`#input-${index + 1}`);
+          if (nextInput) nextInput.disabled = false;
 
-                // Habilitar o próximo campo, se existir
-                const nextInput = document.querySelector(`#input-${index + 1}`);
-                if (nextInput) {
-                  nextInput.disabled = false;
-                  nextInput.focus();
-                }
-              }, 500);
+          // Remover a linha da palavra
+          row.classList.add("fade-out");
+          setTimeout(() => {
+            row.remove();
+            if (nextInput) nextInput.focus();
+          }, 500);
 
-              correctCount++;
-              updateAccuracy();
-              if (correctCount === words.length) {
-                stopTimer();
-                document.getElementById("table-head").style.display = "none"; // Remove o cabeçalho
+          correctCount++;
+		  updateAccuracy();
+          if (correctCount === words.length) {
+			stopTimer();
+            document.getElementById("table-head").style.display = "none";
 
-                // Mostra a mensagem de parabéns
-                const congratulations = document.getElementById("congratulations");
-                congratulations.style.display = "block";
+			// Mostra a mensagem de parabéns
+          const congratulations = document.getElementById("congratulations");
+          congratulations.style.display = "block";
 
-                // Esconde a mensagem automaticamente após alguns segundos
-                setTimeout(() => {
-                  congratulations.style.display = "none";
-                }, 5000);
-              }
-            } else {
-              inputField.classList.add("incorrect");
-            }
-          }
-        });
+          // Esconde a mensagem automaticamente após alguns segundos
+          setTimeout(() => {
+            congratulations.style.display = "none";
+          }, 5000);
+		  }
+        } else {
+          inputField.classList.add("incorrect");
+        }
+      }
+    });
 
-        row.querySelector(".word").addEventListener("click", function () {
-          toggleExamples(index, row, word.examples);
-        });
-      });
-    }
+    row.querySelector(".word").addEventListener("click", function () {
+      toggleExamples(index, row, word.examples);
+    });
+  });
+}
+
 
     function toggleExamples(index, row, examples) {
-      const existingExamples = document.getElementById(`examples-${index}`);
-      if (existingExamples) {
-        existingExamples.remove();
-      } else {
-        const exampleRow = document.createElement("tr");
-        exampleRow.setAttribute("id", `examples-${index}`);
-        exampleRow.innerHTML = `<td colspan="2" class="examples">
-          ${examples.map(ex => `
-            <p class="definition">${ex.definition}</p>
-            <p>Exemplo: ${ex.en} → ${ex.pt}</p>
-          `).join("")}
-        </td>`;
-        row.insertAdjacentElement("afterend", exampleRow);
-      }
-    }
-
+  const existingExamples = document.getElementById(`examples-${index}`);
+  if (existingExamples) {
+    existingExamples.remove();
+  } else {
+    const exampleRow = document.createElement("tr");
+    exampleRow.setAttribute("id", `examples-${index}`);
+    exampleRow.innerHTML = `<td colspan="2" class="examples">
+      ${examples.map(ex => `
+        <p class="definition">${ex.definition}</p>
+        <p>Exemplo: ${ex.en} → ${ex.pt}</p>
+      `).join("")}
+    </td>`;
+    row.insertAdjacentElement("afterend", exampleRow);
+  }
+}
     window.onload = function() {
       loadTable();
     };
