@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pratique Inglês</title>
+  <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
   <style>
     body {
       font-family: 'Roboto', Arial, sans-serif;
@@ -51,10 +52,6 @@
       border-radius: 4px;
       box-sizing: border-box;
     }
-    input:disabled {
-      background-color: #f1f1f1;
-      color: #aaa;
-    }
     .correct {
       color: green;
       font-weight: bold;
@@ -89,8 +86,16 @@
       margin-bottom: 20px;
     }
     .timer {
-      font-size: 20px;
+      font-size: 48px;
       font-weight: bold;
+      font-family: 'DS-Digital', monospace;
+      color: #555555;
+      background: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     button {
       margin-top: 10px;
@@ -103,11 +108,7 @@
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    button:hover:enabled {
+    button:hover {
       background-color: #3367d6;
     }
     .accuracy {
@@ -139,7 +140,6 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       animation: fadeInScale 0.5s ease-out;
     }
-
     @keyframes fadeInScale {
       from {
         opacity: 0;
@@ -170,7 +170,7 @@
   <header>100 palavras em Inglês mais usadas no dia a dia</header>
   <main>
     <div class="controls">
-      <div class="timer">Tempo: <span id="timer">0:00</span></div>
+      <div class="timer" id="timer">00:00</div>
       <div class="accuracy"><span id="accuracy">Acertos: 0/100 (0%)</span></div>
       <button id="reset-timer" disabled>Resetar Timer</button>
     </div>
@@ -190,15 +190,15 @@
     Parabéns! Você concluiu todas as palavras! 🎉
   </div>
   <div id="advertisement" class="advertisement">
-    Lançamento exclusivo no dia 31 de janeiro de 2025!!!<br />
-    Entre já na lista de espera do aplicativo que vai turbinar seu aprendizado prático de Inglês.<br />
+    Lançamento exclusivo no dia 31 de janeiro de 2025!!!<br/>
+    Entre já na lista de espera do aplicativo que vai turbinar seu aprendizado prático de Inglês.<br/>
     <a href="https://wa.me/5545999380856" target="_blank">Envie um "eu quero" para nosso Whatsapp</a>
   </div>
   <script>
     const words = [
-      { english: "I", portuguese: ["eu"], examples: [{ definition: "Pronome pessoal sujeito.", en: "I am happy.", pt: "Eu estou feliz." }] },
-      { english: "you", portuguese: ["você", "vocês", "tu"], examples: [{ definition: "Pronome pessoal sujeito ou objeto.", en: "You are my friend.", pt: "Você é meu amigo." }] },
-      { english: "he", portuguese: ["ele"], examples: [{ definition: "Pronome pessoal sujeito masculino.", en: "He is a teacher.", pt: "Ele é um professor." }] }
+      {"english": "I", "portuguese": ["eu"], "examples": [{"definition": "Pronome pessoal sujeito.", "en": "I am happy.", "pt": "Eu estou feliz."}]},
+      {"english": "you", "portuguese": ["você", "vocês", "tu"], "examples": [{"definition": "Pronome pessoal sujeito ou objeto.", "en": "You are my friend.", "pt": "Você é meu amigo."}]},
+      {"english": "he", "portuguese": ["ele"], "examples": [{"definition": "Pronome pessoal sujeito masculino.", "en": "He is a teacher.", "pt": "Ele é um professor."}]}
     ];
 
     const tableBody = document.getElementById("word-list");
@@ -219,8 +219,8 @@
       if (!startTime) {
         startTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
-        resetButton.disabled = false;
         resetButton.textContent = "Reiniciar";
+        resetButton.disabled = false;
       }
     }
 
@@ -231,19 +231,19 @@
     function resetTimer() {
       startTime = null;
       clearInterval(timerInterval);
-      timerElement.textContent = "0:00";
+      timerElement.textContent = "00:00";
+      resetButton.textContent = "Resetar Timer";
+      resetButton.disabled = true;
       correctCount = 0;
       updateAccuracy();
       loadTable();
-      resetButton.disabled = true;
-      resetButton.textContent = "Resetar Timer";
     }
 
     function updateTimer() {
       const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-      const minutes = Math.floor(elapsedTime / 60);
-      const seconds = elapsedTime % 60;
-      timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+      const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+      timerElement.textContent = `${minutes}:${seconds}`;
     }
 
     resetButton.addEventListener("click", resetTimer);
@@ -256,85 +256,61 @@
         row.setAttribute("id", `row-${index}`);
         row.innerHTML = `
           <td><span class="word" data-index="${index}">${word.english}</span></td>
-          <td><input type="text" id="input-${index}" ${index === 0 ? "" : "disabled"} /></td>
+          <td><input type="text" id="input-${index}" /></td>
         `;
         tableBody.appendChild(row);
 
         const inputField = document.getElementById(`input-${index}`);
-
+        inputField.disabled = index !== 0; // Desabilita todos os campos, exceto o primeiro
         inputField.addEventListener("input", function () {
           startTimer();
-
-          const inputValue = inputField.value.trim().toLowerCase();
-          if (word.portuguese.includes(inputValue)) {
-            inputField.classList.add("correct");
-            inputField.classList.remove("incorrect");
-
-            // Remover a linha de exemplos (se existir)
-            const exampleRow = document.getElementById(`examples-${index}`);
-            if (exampleRow) {
-              exampleRow.remove();
-            }
-
-            // Remover a linha da palavra
-            row.classList.add("fade-out");
-            setTimeout(() => {
-              row.remove();
-
-              // Habilitar o próximo campo de entrada, se existir
-              const nextInput = document.querySelector(`#input-${index + 1}`);
-              if (nextInput) {
-                nextInput.disabled = false;
-                nextInput.focus();
-              }
-            }, 500);
-
-            correctCount++;
-            updateAccuracy();
-            if (correctCount === words.length) {
-              stopTimer();
-              document.getElementById("table-head").style.display = "none"; // Remove o cabeçalho
-
-              // Mostra a mensagem de parabéns
-              const congratulations = document.getElementById("congratulations");
-              congratulations.style.display = "block";
-
-              // Esconde a mensagem automaticamente após alguns segundos
-              setTimeout(() => {
-                congratulations.style.display = "none";
-              }, 5000);
-            }
-          } else {
-            inputField.classList.add("incorrect");
-          }
-        });
-
-        row.querySelector(".word").addEventListener("click", function () {
-          toggleExamples(index, row, word.examples);
+          checkAnswer(inputField, word, index);
         });
       });
 
-      // Garantir que o foco esteja no primeiro campo habilitado
+      // Foco inicial no primeiro campo habilitado
       const firstInput = document.querySelector("input:not([disabled])");
-      if (firstInput) {
-        firstInput.focus();
-      }
+      if (firstInput) firstInput.focus();
     }
 
-    function toggleExamples(index, row, examples) {
-      const existingExamples = document.getElementById(`examples-${index}`);
-      if (existingExamples) {
-        existingExamples.remove();
+    function checkAnswer(inputField, word, index) {
+      const inputValue = inputField.value.trim().toLowerCase();
+      if (word.portuguese.includes(inputValue)) {
+        inputField.classList.add("correct");
+        inputField.classList.remove("incorrect");
+
+        // Remove a linha da palavra
+        const row = document.getElementById(`row-${index}`);
+        row.classList.add("fade-out");
+        setTimeout(() => {
+          row.remove();
+
+          // Habilita o próximo campo
+          const nextInput = document.getElementById(`input-${index + 1}`);
+          if (nextInput) {
+            nextInput.disabled = false;
+            nextInput.focus();
+          }
+        }, 500);
+
+        correctCount++;
+        updateAccuracy();
+
+        if (correctCount === words.length) {
+          stopTimer();
+          document.getElementById("table-head").style.display = "none"; // Remove o cabeçalho
+
+          // Mostra a mensagem de parabéns
+          const congratulations = document.getElementById("congratulations");
+          congratulations.style.display = "block";
+
+          // Esconde a mensagem automaticamente após alguns segundos
+          setTimeout(() => {
+            congratulations.style.display = "none";
+          }, 5000);
+        }
       } else {
-        const exampleRow = document.createElement("tr");
-        exampleRow.setAttribute("id", `examples-${index}`);
-        exampleRow.innerHTML = `<td colspan="2" class="examples">
-          ${examples.map(ex => `
-            <p class="definition">${ex.definition}</p>
-            <p>Exemplo: ${ex.en} → ${ex.pt}</p>
-          `).join("")}
-        </td>`;
-        row.insertAdjacentElement("afterend", exampleRow);
+        inputField.classList.add("incorrect");
       }
     }
 
