@@ -237,7 +237,7 @@
     <div class="controls">
       <div class="timer" id="timer">00:00</div>
       <div class="accuracy"><span id="accuracy">Acertos: 0/100 (0%)</span></div>
-      <button id="reset-timer" disabled>Resetar Timer</button>
+      <button id="reset-timer" disabled>Reiniciar</button>
     </div>
     <table>
       <thead id="table-head">
@@ -334,7 +334,6 @@
       if (!startTime) {
         startTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
-        resetButton.textContent = "Reiniciar";
         resetButton.disabled = false;
       }
     }
@@ -347,7 +346,6 @@
       startTime = null;
       clearInterval(timerInterval);
       timerElement.textContent = "00:00";
-      resetButton.textContent = "Resetar Timer";
       resetButton.disabled = true;
       correctCount = 0;
       updateAccuracy();
@@ -355,13 +353,25 @@
     }
 
     function updateTimer() {
-      const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-      const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
-      const seconds = (elapsedTime % 60).toString().padStart(2, '0');
-      timerElement.textContent = `${minutes}:${seconds}`;
+ 		if (!startTime) return; // Garante que só atualiza o timer se houver um `startTime`
+
+		  const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+		  const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+		  const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+		  timerElement.textContent = `${minutes}:${seconds}`;
+
+		  // Apenas para depuração visual
+		  if (timerElement.textContent === "00:00") {
+			resetButton.disabled = true; // Desabilita o botão se o timer for 00:00
+		  }
     }
 
     resetButton.addEventListener("click", resetTimer);
+	
+	window.onload = function () {
+  resetTimer(); // Garante que o botão esteja desabilitado no carregamento
+  loadTable();
+};
 
     function loadTable() {
       tableBody.innerHTML = "";
