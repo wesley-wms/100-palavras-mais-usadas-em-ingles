@@ -14,14 +14,7 @@
       background-color: #f8f9fa;
       color: #212121;
     }
-    header {
-      background-color: #4285f4;
-      color: white;
-      padding: 16px;
-      font-size: 24px;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+    
     main {
       padding: 20px;
       max-width: 800px;
@@ -86,7 +79,7 @@
       margin-bottom: 20px;
     }
     .timer {
-      font-size: 48px;
+      font-size: 30px;
       font-weight: bold;
       font-family: 'DS-Digital', monospace;
       color: #555555;
@@ -164,10 +157,82 @@
       box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
       z-index: 10;
     }
+	
+	
+
+
+ header {
+      background-color: #4285f4;
+      color: white;
+      padding: 8px;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .user-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      color: #4285f4;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .user-btn:hover {
+      background-color: #f1f3f4;
+    }
+    .user-btn img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      z-index: 1000;
+      overflow: hidden;
+    }
+    .dropdown a {
+      display: block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #212121;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .dropdown a:hover {
+      background-color: #f1f3f4;
+    }
+
+	
   </style>
 </head>
 <body>
-  <header>100 palavras em Inglês mais usadas no dia a dia</header>
+  <header>
+    <span>100 palavras em Inglês mais usadas no dia a dia</span>
+    <button id="user-preferences-btn" class="user-btn" title="Preferências do Usuário"></button>
+    <div id="user-dropdown" class="dropdown">
+      <a href="#profile">Perfil</a>
+      <a href="#settings">Configurações</a>
+      <a href="#logout">Sair</a>
+    </div>
+  </header>
   <main>
     <div class="controls">
       <div class="timer" id="timer">00:00</div>
@@ -195,6 +260,56 @@
     <a href="https://wa.me/5545999380856" target="_blank">Envie um "eu quero" para nosso Whatsapp</a>
   </div>
   <script>
+  
+  
+ 
+ 
+ 
+ 
+ 
+ const userPreferencesButton = document.getElementById("user-preferences-btn");
+    const dropdownMenu = document.getElementById("user-dropdown");
+
+    // Simula dados do usuário (substitua pela integração real)
+    const user = {
+      name: "João Silva",
+      photo: null,
+    };
+
+    // Configura o botão
+    function setupUserButton(user) {
+      if (user.photo) {
+        userPreferencesButton.style.backgroundImage = `url(${user.photo})`;
+        userPreferencesButton.textContent = "";
+      } else {
+        const initial = user.name ? user.name.charAt(0).toUpperCase() : "?";
+        userPreferencesButton.textContent = initial;
+      }
+    }
+
+    // Mostra ou oculta o menu drop-down
+    function toggleDropdown() {
+      const isVisible = dropdownMenu.style.display === "block";
+      dropdownMenu.style.display = isVisible ? "none" : "block";
+    }
+
+    // Esconde o menu ao clicar fora dele
+    function hideDropdown(event) {
+      if (!userPreferencesButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+        dropdownMenu.style.display = "none";
+      }
+    }
+
+    userPreferencesButton.addEventListener("click", toggleDropdown);
+    document.addEventListener("click", hideDropdown);
+
+    setupUserButton(user);
+ 
+ 
+
+  
+  
+  
     const words = [
       {"english": "I", "portuguese": ["eu"], "examples": [{"definition": "Pronome pessoal sujeito.", "en": "I am happy.", "pt": "Eu estou feliz."}]},
       {"english": "you", "portuguese": ["você", "vocês", "tu"], "examples": [{"definition": "Pronome pessoal sujeito ou objeto.", "en": "You are my friend.", "pt": "Você é meu amigo."}]},
