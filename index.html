@@ -164,7 +164,7 @@ color: #333;
   <main>
     <div class="controls">
       <div class="timer">Tempo: <span id="timer">0:00</span></div>
-	  <div class="accuracy"><span id="accuracy">Acertos: 0/4 (0%)</span></div>
+	  <div class="accuracy"><span id="accuracy">Acertos: 0/100 (0%)</span></div>
       <button id="reset-timer">Resetar Timer</button>
     </div>
     <table>
@@ -189,27 +189,10 @@ color: #333;
   </div>
   <script>
     const words = [
-  {
-        english:"a",
-        portuguese:["um", "uma", "por", "cada", "em"],
-        examples:[]
-},
-{
-        english:"about",
-        portuguese:["sobre", "a respeito de", "cerca de", "por volta de", "quase", "em torno de"],
-        examples:[]
-},
-{
-        english:"all",
-        portuguese:["tudo", "todo", "toda", "todos", "todas", "completamente", "inteiramente"],
-        examples:[]
-},
-{
-        english:"also",
-        portuguese:["também", "além disso", "igualmente"],
-        examples:[]
-}
-];
+{"english": "I", "portuguese": ["eu"], "examples": [{"definition": "Pronome pessoal sujeito.", "en": "I am happy.", "pt": "Eu estou feliz."}]},
+{"english": "you", "portuguese": ["você", "vocês", "tu"], "examples": [{"definition": "Pronome pessoal sujeito ou objeto.", "en": "You are my friend.", "pt": "Você é meu amigo."}]},
+{"english": "he", "portuguese": ["ele"], "examples": [{"definition": "Pronome pessoal sujeito masculino.", "en": "He is a teacher.", "pt": "Ele é um professor."}]}
+	];
 
     const tableBody = document.getElementById("word-list");
     const timerElement = document.getElementById("timer");
@@ -277,6 +260,9 @@ color: #333;
         if (word.portuguese.includes(inputValue)) {
           inputField.classList.add("correct");
           inputField.classList.remove("incorrect");
+		  if (index + 1 < correctAnswers.length) {
+			  document.getElementById(`word${index + 1}`).disabled = false;
+			}
 
 
           // Remover a linha de exemplos (se existir)
